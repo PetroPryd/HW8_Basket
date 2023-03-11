@@ -54,6 +54,8 @@ namespace ShopWeb
             services.AddControllersWithViews();
 
             services.AddAutoMapper(typeof(AppMapProfile));
+
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,9 +79,12 @@ namespace ShopWeb
                 FileProvider = new PhysicalFileProvider(dir),
                 RequestPath="/images"
             });
+            app.UseSession();
 
             app.UseRouting();
 
+            app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.SeedData();

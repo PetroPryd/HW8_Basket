@@ -18,5 +18,6 @@ namespace ShopWeb.Data.Entities
         public int CategoryId { get; set; }
         public virtual CategoryEntity Category { get; set; }
         public virtual ICollection<ProductImageEntity> ProductImages { get; set; }
+        public virtual ICollection<BasketEntity> Baskets { get; set; }
     }
 }

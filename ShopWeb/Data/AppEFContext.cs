@@ -23,6 +23,7 @@ namespace ShopWeb.Data
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<ProductEntity> Products { get; set; }
         public DbSet<ProductImageEntity> ProductImages { get; set; }
+        public DbSet<BasketEntity> Basket { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -40,6 +41,10 @@ namespace ShopWeb.Data
                     .WithMany(r => r.UserRoles)
                     .HasForeignKey(u => u.UserId)
                     .IsRequired();
+            });
+            builder.Entity<BasketEntity>(basket =>
+            {
+                basket.HasKey(b => new { b.UserId, b.ProductId });
             });
         }
     }

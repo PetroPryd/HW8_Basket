@@ -2,6 +2,7 @@
 using ShopWeb.Data.Entities;
 using ShopWeb.Models.Helpers;
 using ShopWeb.Models.Products;
+using ShopWeb.Models.Users;
 using System.Linq;
 
 namespace ShopWeb.Mapper

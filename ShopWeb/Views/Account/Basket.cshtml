@@ -1,0 +1,107 @@
+﻿@using ShopWeb.Data;
+@model IEnumerable<ShopWeb.Data.Entities.BasketEntity>
+
+@{
+    ViewData["Title"] = "Basket";
+    int i = 1;
+}
+
+<h1 class="text-center">Кошик</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                #
+                @* @Html.DisplayNameFor(model => model.Id)*@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Category.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Count)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @(i++)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Category.Name)
+                </td>
+                <td>
+                    @*<input value="@Html.DisplayFor(modelItem => item.Count)" type="number" />*@
+                    <div>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </div>
+                    <button>
+                        @Html.ActionLink("+", "BasketCountPlus", new {  id=item.ProductId  }, new {data_countplusbask=item.ProductId})
+                        @*@item.Count++*@
+                    </button>
+                    <button>
+                        @Html.ActionLink("-", "BasketCountMinus", new {  id=item.ProductId  }, new {data_countminusbask=item.ProductId})
+                        @*@if(item.Count >= 2)
+                        {
+                            @item.Count--
+                        }*@
+                    </button>
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/lib/axios/axios.min.js"></script>
+    <script>
+        window.addEventListener("load", (event) => {
+            console.log("page is fully loaded");
+
+            const items = document.querySelectorAll("[data_countplusbask]");
+
+            for (var i = 0; i < items.length; i++) {
+                items[i].onclick = function (e) {
+                    e.preventDefault();
+                    console.log("product id: ", this.dataset.countplusbask);
+
+                    axios.post("/Account/BasketCountPlus", { Id: this.dataset.countplusbask }, {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    });
+                }
+            }
+
+            const items2 = document.querySelectorAll("[data_countminusbask]");
+
+            for (var i = 0; i < items2.length; i++) {
+                items2[i].onclick = function (e) {
+                    e.preventDefault();
+                    console.log("product id: ", this.dataset.countplusbask);
+
+                    axios.post("/Account/BasketCountMinus", { Id: this.dataset.countminusbask }, {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    });
+                }
+            }
+        });
+    </script>
+}

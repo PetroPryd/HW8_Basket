@@ -10,8 +10,8 @@ using ShopWeb.Data;
 namespace ShopWeb.Migrations
 {
     [DbContext(typeof(AppEFContext))]
-    [Migration("20230207164035_Add tblIdentity")]
-    partial class AddtblIdentity
+    [Migration("20230307184446_Add tblBasket")]
+    partial class AddtblBasket
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -70,10 +70,12 @@ namespace ShopWeb.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -94,10 +96,12 @@ namespace ShopWeb.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
@@ -105,6 +109,24 @@ namespace ShopWeb.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("ShopWeb.Data.Entities.BasketEntity", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("Count")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("UserId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("tblBaskets");
                 });
 
             modelBuilder.Entity("ShopWeb.Data.Entities.CategoryEntity", b =>
@@ -352,6 +374,21 @@ namespace ShopWeb.Migrations
                 {
                     b.HasOne("ShopWeb.Data.Entities.Identity.UserEntity", null)
                         .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ShopWeb.Data.Entities.BasketEntity", b =>
+                {
+                    b.HasOne("ShopWeb.Data.Entities.ProductEntity", "Product")
+                        .WithMany("Baskets")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopWeb.Data.Entities.Identity.UserEntity", "User")
+                        .WithMany("Baskets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

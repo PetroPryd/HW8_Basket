@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShopWeb.Constants;
 using ShopWeb.Data;
 using ShopWeb.Data.Entities;
 using ShopWeb.Models.Helpers;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace ShopWeb.Controllers
 {
+    
     public class ProductsController : Controller
     {
         private readonly AppEFContext _appContext;
@@ -24,6 +27,19 @@ namespace ShopWeb.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = Roles.User)]
+        public IActionResult IndexUser()
+        {
+            var model = _appContext.Products
+                .AsQueryable()
+                .Include(x => x.Category)
+                .Select(x => _mapper.Map<ProductItemViewModel>(x))
+                .ToList();
+
+            return View(model);
+        }
+
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Index()
         {
             //var model = _appContext.Products.Select(x=> new ProductItemViewModel

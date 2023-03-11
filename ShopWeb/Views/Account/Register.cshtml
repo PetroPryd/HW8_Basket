@@ -1,0 +1,94 @@
+﻿@model ShopWeb.Models.Users.UserAddViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+@section Styles {
+    <link href="~/lib/cropperjs/cropper.min.css" rel="stylesheet" />
+    <style>
+        .preview {
+            height: 100px !important;
+            width: 100px !important;
+            border: 1px solid silver;
+            overflow: hidden;
+        }
+    </style>
+}
+
+<h1 class="text-center">Register</h1>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form asp-action="Register">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <div id="myImages">
+                </div>
+                <label asp-for="UploadImage" class="form-label">
+                    <img src="~/images/select.png"
+                         id="imagePreview"
+                         alt="Alternate Text"
+                         width="150"
+                         style="cursor: pointer" />
+                </label>
+                <input asp-for="UploadImage" type="file" class="form-control d-none">
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Register" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@*@await Html.PartialAsync("_ModalCropper")*@
+
+@section Scripts {
+    <script src="~/lib/cropperjs/cropper.min.js"></script>
+    <script src="~/lib/axios/axios.min.js"></script>
+    <script src="~/js/products/create.js"></script>
+
+    <script>
+        addEventListener("load", (event) => {
+            const UploadImage = document.getElementById("UploadImage");
+            const imagePreview = document.getElementById("imagePreview");
+            UploadImage.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                console.log("Select file", file);
+                var url = URL.createObjectURL(file);
+                imagePreview.src = url;
+            });
+            console.log("Load window");
+        });
+    </script>
+}
+

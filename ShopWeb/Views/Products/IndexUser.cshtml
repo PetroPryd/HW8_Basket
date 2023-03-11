@@ -1,15 +1,12 @@
 ﻿@model IEnumerable<ShopWeb.Models.Products.ProductItemViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "IndexUser";
     int i = 1;
 }
 
 <h1 class="text-center">Список продуктів</h1>
 
-<p>
-    <a asp-action="Create">Додати продукт</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -46,12 +43,37 @@
                 @Html.DisplayFor(modelItem => item.CategoryName)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                @*@Html.ActionLink("ToBasket", "ToBasket", new { /* id=item.PrimaryKey */ })*@
+                @Html.ActionLink("Add to Basket", "AddToBasket", new {  id=item.Id  }, new {data_addbask=item.Id})
             </td>
+            @*<td class="form-group">
+                <input type="submit" value="Add To Basket" class="btn btn-primary" />
+            </td>*@
         </tr>
 }
     </tbody>
 </table>
+
+@section Scripts {
+	<script src="~/lib/axios/axios.min.js"></script>
+    <script>
+        window.addEventListener("load", (event) => {
+            console.log("page is fully loaded");
+
+            const items = document.querySelectorAll("[data-addbask]");
+            //console.log("remove button", items);
+            for (var i = 0; i < items.length; i++) {
+                items[i].onclick = function (e) {
+                    e.preventDefault();
+                    console.log("product id: ", this.dataset.addbask);
+
+                    axios.post("/Account/AddToBasket", {Id:this.dataset.addbask, Count:1}, {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    });
+                    //const container = this.closest(".col-md-4");
+                    //container.remove();
+                }
+            }
+        });
+    </script>
+}
