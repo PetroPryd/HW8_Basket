@@ -165,26 +165,12 @@ namespace ShopWeb.Controllers
         {
             var nameUser = User.Identity.Name;
             var user = _userManager.FindByNameAsync(nameUser).Result;
-
-            if (_appContext.Basket.FirstOrDefault(x => x.ProductId == model.Id) != null)
-            {
-                //var basketUpdate = new BasketEntity
-                //{
-                //    ProductId = model.Id,
-                //    UserId = user.Id,
-                //    Count = model.Count
-                //};
-                model.Count++;
-                var basketUpdate2 = new BasketEntity
-                {
-                    ProductId = model.Id,
-                    UserId = user.Id,
-                    Count = model.Count
-                };
-                _appContext.Entry(basketUpdate2).State = EntityState.Modified;
-                //_appContext.Basket.Remove(basketUpdate);
-                //_appContext.Basket.Add(basketUpdate2);
-                _appContext.Basket.Update(basketUpdate2);
+            var item = _appContext.Basket.FirstOrDefault(x => x.ProductId == model.Id && x.UserId==user.Id);
+            if (item != null)
+            { 
+                item.Count++;
+                _appContext.SaveChanges();  
+                
             }
             else
             {
@@ -195,34 +181,21 @@ namespace ShopWeb.Controllers
                     Count = model.Count
                 };
                 _appContext.Basket.Add(basket);
+                _appContext.SaveChanges();
             }
-            _appContext.SaveChanges();
             //Console.WriteLine("add to basket");
 
-            return RedirectToAction("IndexUser");
+            return Ok();
         }
 
-        [HttpGet]
-        public IActionResult BasketCountPlus(int id)
-        {
-            BasketAddViewModel model = new BasketAddViewModel();
-            model.Id = id;
-
-            return View(model);
-        }
+       
 
         [HttpPost]
         public IActionResult BasketCountPlus(BasketAddViewModel model)
         {
             var nameUser = User.Identity.Name;
             var user = _userManager.FindByNameAsync(nameUser).Result;
-
-            //var basketUpdate = new BasketEntity
-            //{
-            //    ProductId = model.Id,
-            //    UserId = user.Id,
-            //    Count = model.Count
-            //};
+                        
             model.Count++;
             var basketUpdate2 = new BasketEntity
             {
@@ -231,22 +204,11 @@ namespace ShopWeb.Controllers
                 Count = model.Count
             };
             _appContext.Entry(basketUpdate2).State = EntityState.Modified;
-            //_appContext.Basket.Remove(basketUpdate);
-            //_appContext.Basket.Add(basketUpdate2);
             _appContext.Basket.Update(basketUpdate2);
 
             _appContext.SaveChanges();
 
-            return RedirectToAction("Basket");
-        }
-
-        [HttpGet]
-        public IActionResult BasketCountMinus(int id)
-        {
-            BasketAddViewModel model = new BasketAddViewModel();
-            model.Id = id;
-
-            return View(model);
+            return Ok();
         }
 
         [HttpPost]

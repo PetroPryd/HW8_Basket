@@ -77,7 +77,7 @@
         window.addEventListener("load", (event) => {
             console.log("page is fully loaded");
 
-            const items = document.querySelectorAll("[data_countplusbask]");
+            const items = document.querySelectorAll("[data-countplusbask]");
 
             for (var i = 0; i < items.length; i++) {
                 items[i].onclick = function (e) {
@@ -90,7 +90,7 @@
                 }
             }
 
-            const items2 = document.querySelectorAll("[data_countminusbask]");
+            const items2 = document.querySelectorAll("[data-countminusbask]");
 
             for (var i = 0; i < items2.length; i++) {
                 items2[i].onclick = function (e) {
