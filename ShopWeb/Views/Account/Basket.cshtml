@@ -53,14 +53,9 @@
                     </div>
                     <button>
                         @Html.ActionLink("+", "BasketCountPlus", new {  id=item.ProductId  }, new {data_countplusbask=item.ProductId})
-                        @*@item.Count++*@
                     </button>
                     <button>
                         @Html.ActionLink("-", "BasketCountMinus", new {  id=item.ProductId  }, new {data_countminusbask=item.ProductId})
-                        @*@if(item.Count >= 2)
-                        {
-                            @item.Count--
-                        }*@
                     </button>
                 </td>
                 <td>
@@ -87,6 +82,8 @@
                     axios.post("/Account/BasketCountPlus", { Id: this.dataset.countplusbask }, {
                         headers: { "Content-Type": "multipart/form-data" },
                     });
+
+                    location.reload();
                 }
             }
 
@@ -100,6 +97,8 @@
                     axios.post("/Account/BasketCountMinus", { Id: this.dataset.countminusbask }, {
                         headers: { "Content-Type": "multipart/form-data" },
                     });
+
+                    location.reload()
                 }
             }
         });

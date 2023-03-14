@@ -169,8 +169,7 @@ namespace ShopWeb.Controllers
             if (item != null)
             { 
                 item.Count++;
-                _appContext.SaveChanges();  
-                
+                _appContext.SaveChanges();
             }
             else
             {
@@ -195,20 +194,12 @@ namespace ShopWeb.Controllers
         {
             var nameUser = User.Identity.Name;
             var user = _userManager.FindByNameAsync(nameUser).Result;
-                        
-            model.Count++;
-            var basketUpdate2 = new BasketEntity
-            {
-                ProductId = model.Id,
-                UserId = user.Id,
-                Count = model.Count
-            };
-            _appContext.Entry(basketUpdate2).State = EntityState.Modified;
-            _appContext.Basket.Update(basketUpdate2);
 
+            var item = _appContext.Basket.FirstOrDefault(x => x.ProductId == model.Id && x.UserId == user.Id);
+            item.Count++;
             _appContext.SaveChanges();
 
-            return Ok();
+            return RedirectToAction("Basket");
         }
 
         [HttpPost]
@@ -217,29 +208,11 @@ namespace ShopWeb.Controllers
             var nameUser = User.Identity.Name;
             var user = _userManager.FindByNameAsync(nameUser).Result;
 
-            //var basketUpdate = new BasketEntity
-            //{
-            //    ProductId = model.Id,
-            //    UserId = user.Id,
-            //    Count = model.Count
-            //};
-            if(model.Count >= 2)
-            {
-                model.Count--;
-            }
-            else
-            {
-                var basketUpdate2 = new BasketEntity
-                {
-                    ProductId = model.Id,
-                    UserId = user.Id,
-                    Count = model.Count
-                };
-                _appContext.Entry(basketUpdate2).State = EntityState.Modified;
-                //_appContext.Basket.Remove(basketUpdate);
-                //_appContext.Basket.Add(basketUpdate2);
-                _appContext.Basket.Update(basketUpdate2);
+            var item = _appContext.Basket.FirstOrDefault(x => x.ProductId == model.Id && x.UserId == user.Id);
 
+            if (item.Count >= 2)
+            {
+                item.Count--;
                 _appContext.SaveChanges();
             }
 
